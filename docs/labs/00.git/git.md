@@ -3,83 +3,14 @@
 ## Table Of Contents
 
 - [Lab 0: Git](#lab-0-git)
-    - [Table Of Contents](#table-of-contents)
-    - [**Exercise 1: Installing and configuring git**](#exercise-1-installing-and-configuring-git)
-        - [**Download and setup git**](#download-and-setup-git)
-        - [**Generate SSH keys**](#generate-ssh-keys)
-    - [**Exercise 2: Configuring GitHub**](#exercise-2-configuring-github)
-        - [**Adding private SSH key to GitHub**](#adding-private-ssh-key-to-github)
-    - [**Exercise 3: Creating GitHub Repository**](#exercise-3-creating-github-repository)
-        - [**Create remote repository**](#create-remote-repository)
-    - [**Exercise 4: Cloning remote git repository and creating pull request**](#exercise-4-cloning-remote-git-repository-and-creating-pull-request)
-        - [**Cloning repository**](#cloning-repository)
-        - [**Adding and committing code to repository**](#adding-and-committing-code-to-repository)
-        - [**Creating Pull Request**](#creating-pull-request)
+  - [Table Of Contents](#table-of-contents)
+  - [**Exercise 3: Creating GitHub Repository**](#exercise-3-creating-github-repository)
+    - [**Create remote repository**](#create-remote-repository)
+  - [**Exercise 4: Cloning remote git repository and creating pull request**](#exercise-4-cloning-remote-git-repository-and-creating-pull-request)
+    - [**Cloning repository**](#cloning-repository)
+    - [**Adding and committing code to repository**](#adding-and-committing-code-to-repository)
+    - [**Creating Pull Request**](#creating-pull-request)
 
-## **Exercise 1: Installing and configuring git**
-
-Git is the most used distributed version control system.
-  
-### **Download and setup git**
-
-Download git from <https://git-scm.com/downloads> link and choose to download for your operating system.
-
-![select-git-components](./git-select-components.png)
-
-If you know what you are doing, you can choose Vim as git’s default text editor, otherwise, I recommend using Visual Studio Code.
-
-![git-code-editor](./git-code-editor.png)
-
-Default branch name doesn’t matter much but it is still best to follow common practices which means naming it main branch.
-
-![git-default-branch](./git-default-branch-name.png)
-
-This step enables us to use git from other tools, for example powershell.
-
-![git-powershell](./git-powershell.png)
-
-Configure SSH for git as follows:
-
-![git-ssh](./git-ssh.png)
-![git-ssh2](./git-ssh2.png)
-
-Follow the rest of installation steps and choose default options until git is installed.
-
-### **Generate SSH keys**
-
-Git communicates with remote repositories using **SSH** protocol which is secured by private and public keys encryption.
-
-In order for repositories to have access to remote repositories, private SSH keys which are generated locally must be added on remote repository vendors, for example GitHub, bitbucket…
-
-To generate ssh keys, use command in your terminal:
-
-```shell
-ssh-keygen
-```
-
-and press enter for all options
-
-![shh-keygen](./ssh-keygen.png)
-
-SSH keypair is generated default location as stated
-`C:\Users\ivan.pazanin\.ssh\id_rsa` or more generally `C:\Users\{your-username}\.ssh\id_rsa`.
-
-## **Exercise 2: Configuring GitHub**
-
-GitHub is a provider of internet hosting for software development and version control using git.
-
-### **Adding private SSH key to GitHub**
-
-Open generated public ssh key (id_rsa.pub file) in text editor and copy all contents (CTRL+a, CTRL+c).
-
-In github go to: profile icon > Settings > SSH and GPG keys > New SSH key
-Or <https://github.com/settings/keys>
-In Title input give name for your SSH key (ex: my-personal-laptop)
-In Key input paste copied public SSH key
-
-![ssh-key-github](./ssh-key-github.png)
-
-To add keypress, Add SSH key, no error message should be present if everything is done correctly.
 
 ## **Exercise 3: Creating GitHub Repository**
 
