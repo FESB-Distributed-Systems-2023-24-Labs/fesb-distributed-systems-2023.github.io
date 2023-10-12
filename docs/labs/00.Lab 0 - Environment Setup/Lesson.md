@@ -1,7 +1,9 @@
+# Lesson
 # Lab 0: Environment Setup
 
 ## Table Of Contents
 
+- [Lesson](#lesson)
 - [Lab 0: Environment Setup](#lab-0-environment-setup)
   - [Table Of Contents](#table-of-contents)
   - [Requirements](#requirements)
