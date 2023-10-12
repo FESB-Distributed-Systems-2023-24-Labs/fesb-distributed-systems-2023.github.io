@@ -2,6 +2,20 @@
 
 ## Table Of Contents
 
+- [Lab 0: Environment Setup](#lab-0-environment-setup)
+  - [Table Of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [**Step 1: Installing VS Code**](#step-1-installing-vs-code)
+  - [**Step 2: Installing and Configuring Git**](#step-2-installing-and-configuring-git)
+    - [**Downloading and Configuring Git**](#downloading-and-configuring-git)
+    - [**Generating SSH keys**](#generating-ssh-keys)
+  - [**Step 3: Configuring GitHub**](#step-3-configuring-github)
+    - [**Adding public SSH key to GitHub**](#adding-public-ssh-key-to-github)
+    - [**Testing the GitHub SSH key**](#testing-the-github-ssh-key)
+  - [**Step 4: Installing .NET 6 SDK**](#step-4-installing-net-6-sdk)
+    - [**Testing the .NET Installation**](#testing-the-net-installation)
+- [Conclusion](#conclusion)
+
 ## Requirements
 
 To successfully work and complete the lab assignments for the *Distributed Systems* and *Software Engineering* courses, a student **MUST** have following installed on his/her personal computer:
@@ -13,15 +27,15 @@ To successfully work and complete the lab assignments for the *Distributed Syste
 
 ## **Step 1: Installing VS Code**
 
-Download and install VS Code from the link in `Requirements` section.
+Download and install VS Code from the link in [`Requirements`](#requirements) section.
 
 ## **Step 2: Installing and Configuring Git**
 
 Git is the most used distributed version control system.
   
-### **Download and setup git**
+### **Downloading and Configuring Git**
 
-Download and install git from the link in `Requirements`.
+Download and install git from the link in [`Requirements`](#requirements).
 
 ![select-git-components](./git-select-components.png)
 
@@ -44,7 +58,7 @@ Configure SSH for git as follows:
 
 Follow the rest of installation steps and choose default options until git is installed.
 
-### **Generate SSH keys**
+### **Generating SSH keys**
 
 > NOTE: For detailed information on GitHub and SSH keys please refer to the [Official GitHub Guide to SSH keys - Part 1](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) and [Part 2](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 
@@ -116,9 +130,11 @@ But, if the output is similar to this:
 
 ## **Step 4: Installing .NET 6 SDK**
 
-To build and run C# applications, we need a *.NET SDK - Software Development Kit*. Download and run the SDK installer from the link in the *Requirements* section (most commonly x64 version - for 64-bit *Windows* OS).
+To build and run C# applications, we need a *.NET SDK - Software Development Kit*. Download and run the SDK installer from the link in the [`Requirements`](#requirements) section (most commonly x64 version - for 64-bit *Windows* OS).
 
 ![net-sdk](./net-sdk.PNG)
+
+### **Testing the .NET Installation**
 
 After a short installation, verify the .NET SDK is installed by entering the following command in the `cmd` or `powershell`:
 
