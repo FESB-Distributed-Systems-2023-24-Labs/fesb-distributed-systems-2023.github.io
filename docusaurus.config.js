@@ -8,12 +8,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/vsDark');
 const config = {
   title: 'Distributed Information Systems',
   tagline: '',
-  url: 'https://fesb-distributed-systems-2022.github.io',
+  url: 'https://fesb-distributed-systems-2023.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'fesb-distributed-systems-2022',
+  organizationName: 'fesb-distributed-systems-2023',
   projectName: 'ipazanin-ds-labs',
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
@@ -60,7 +60,7 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://github.com/fesb-distributed-systems-2022/fesb-distributed-systems-2022.github.io',
+            href: 'https://github.com/fesb-distributed-systems-2023/fesb-distributed-systems-2023.github.io',
             label: 'GitHub',
             position: 'right',
           },
