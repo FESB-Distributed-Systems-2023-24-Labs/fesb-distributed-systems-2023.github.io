@@ -30,7 +30,7 @@
 | Luka Svaguša         |   L    |       |
 | Edita Škec           |   L    |       |
 | Marin Uzinić         |   L    |       |
-| Marija Vladimir      |       |       |
+| Marija Vladimir      |   L    |       |
 | Filip Volarević      |       |       |
 | Jere Zambarlin       |   L    |       |
 
