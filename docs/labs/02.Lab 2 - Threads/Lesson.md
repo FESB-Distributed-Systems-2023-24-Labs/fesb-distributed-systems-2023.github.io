@@ -6,6 +6,7 @@
 - [Lesson](#lesson)
 - [Threads](#threads)
   - [Table Of Contents](#table-of-contents)
+  - [**Step 0: Prepare Repository**](#step-0-prepare-repository)
   - [**Exercise 1: Creating Responsive UI**](#exercise-1-creating-responsive-ui)
     - [**Create a Project**](#create-a-project)
     - [**Run the Project**](#run-the-project)
@@ -27,6 +28,12 @@
   - [**Exercise 7: Using async/await**](#exercise-7-using-asyncawait)
     - [**Create a Project**](#create-a-project-5)
     - [**Run Project**](#run-project-2)
+
+## **Step 0: Prepare Repository**
+1. Create and clone GitHub repository
+2. Create `dev` or `development` branch
+3. Create (or modify the existing) `.gitignore` file with the following content: [LINK](https://gist.githubusercontent.com/takekazuomi/10955889/raw/734642c6760915003d36bb124fdae03bb293ae4f/csharp.gitignore)
+4. Commit and push `.gitignore` as "Initial commit"
 
 ## **Exercise 1: Creating Responsive UI**
 
@@ -116,9 +123,17 @@ namespace Threads.ResponsiveUi
 
 ```
 
+> **NOTE:** [Partial Classes - Microsoft Documentation](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/partial-classes-and-methods)
+
 ### **Run the Project**
 
-- Execute the project and the output similar to the following will appear:
+Execute the project by executing the following command:
+
+```shell
+dotnet run --project .\Threads.ResponsiveUi\Threads.ResponsiveUi.csproj
+```
+
+and the output similar to the following will appear:
 
 ![responsive-gui-app](responsive-gui-app.jpg)
 
@@ -276,9 +291,15 @@ namespace Threads.CreatingThreads
 
 ```
 
+> **NOTE:** [`ThreadStart`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.threadstart?view=net-6.0) and [`ParameterizedThreadStart`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.parameterizedthreadstart?view=net-6.0) official *Microsoft* .NET 6 documentation
+
 ### **Run the Project**
 
 Execute the project and the output similar to the following will appear:
+
+```shell
+dotnet run --project .\Threads.CreatingThreads\Threads.CreatingThreads.csproj
+```
 
 ![creating-threads-output](creating-threads-output.jpg)
 
@@ -411,27 +432,34 @@ namespace Threads.ManagingThreads
             var threads = new[]
             {
                 new Thread(new ThreadStart(code.SleepWhileCodeIsNotDone)),
-                new Thread(() => code.SleepWhileCancellationIsNotRequested(cancellationTokeSource.Token)),
-                new Thread(code.DoSleepForLongTime),
+                // new Thread(() => code.SleepWhileCancellationIsNotRequested(cancellationTokeSource.Token)),
+                // new Thread(code.DoSleepForLongTime),
             };
 
-            for (int i = 0; i < threads.Length; i++)
-                threads[i].Start();
+
+            foreach (var thread in threads)
+            {
+                thread.Start();
+            }
 
             Thread.Sleep(3000);
 
-            bool alive = threads[2].IsAlive;
-            if (alive)
+            foreach (var thread in threads)
             {
-                Console.WriteLine($"Primary: Thread {{0}} is alive.", threads[2].ManagedThreadId);
+                if (thread.IsAlive)
+                {
+                    Console.WriteLine($"Primary: Thread {thread.ManagedThreadId} is alive.");
+                }
             }
 
-            code.done = true;
-            threads[2].Interrupt();
+            // TODO: Stop the threads (in code or debugger)
+            Thread.Sleep(TimeSpan.FromSeconds(10));
+            // code.done = true;
+            // threads[2].Interrupt();
 
-            for (int i = 0; i < threads.Length; i++)
+            foreach (var thread in threads)
             {
-                threads[i].Join();
+                thread.Join();
             }
 
             Console.ForegroundColor = ConsoleColor.Red;
@@ -446,6 +474,10 @@ namespace Threads.ManagingThreads
 ### **Run the Project**
 
 - Execute the project and the output similar to the following will appear:
+
+```shell
+dotnet run --project .\Threads.ManagingThreads\Threads.ManagingThreads.csproj
+```
 
 ![managing-threads-output](managing-threads-output.jpg)
 
@@ -480,57 +512,57 @@ dotnet new console --name Threads.UsingPools
 dotnet sln add Threads.UsingPools/Threads.UsingPools.csproj
 ```
 
-- Add following namespaces to class `Program`:
+- Add following code to `Program.cs`:
 
 ```csharp
 using System;
 using System.Threading;
-```
 
-- Add following fields to class `Program`
-
-```csharp
-private static readonly Random random = new();
-private static readonly AsyncLocal<string> localData = new();
-```
-
-- Implement method `DoCompute` in class `Program`:
-
-```csharp
-static void DoCompute(object? state)
+public static class Program
 {
-    var managedThreadId = Environment.CurrentManagedThreadId;
-    var name = localData.Value;
-    
-    Console.WriteLine($"Thread {managedThreadId}, State {state}, Name = \"{name}\"  ");
-    Thread.Sleep(random.Next(1000, 1500));
-}
-```
+    private static readonly ThreadLocal<string> threadLocalData = new();
+    private static readonly AsyncLocal<string> asyncLocalData = new();
 
-- Implement method `Main` in class `Program`:
-
-```csharp
-public static void Main()
-{
-    localData.Value = "Ana";
-    
-    for (int i = 0; i < 10; i++)
+    static void DoCompute(object? state)
     {
-        Thread.Sleep(random.Next(1000, 3000));
-        if (i == 5)
-        {
-            ExecutionContext.SuppressFlow();
-        }
-        ThreadPool.QueueUserWorkItem(DoCompute, i);
+        var managedThreadId = Environment.CurrentManagedThreadId;
+        
+        Console.WriteLine($"Thread [{managedThreadId}], Task [{state}], BEGIN, Thread L.V. = '{threadLocalData.Value}', Async L.V. = '{asyncLocalData.Value}'");
+
+        Thread.Sleep(TimeSpan.FromSeconds(4));
+
+        Console.WriteLine($"Thread [{managedThreadId}], Task [{state}], END, Thread L.V. = '{threadLocalData.Value}', Async L.V. = '{asyncLocalData.Value}'");
     }
-    Console.WriteLine("Press any key");
-    Console.ReadKey();
+
+    public static void Main()
+    {
+        asyncLocalData.Value = "Ana";
+        threadLocalData.Value = "Ana";
+        
+        for (int i = 0; i < 10; i++)
+        {
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            if (i == 5)
+            {
+                asyncLocalData.Value = "Marija";
+                threadLocalData.Value = "Marija";
+                // ExecutionContext.SuppressFlow();
+            }
+            ThreadPool.QueueUserWorkItem(DoCompute, i);
+        }
+        Console.WriteLine("Press any key");
+        Console.ReadKey();
+    }
 }
 ```
 
 ### **Run the Project**
 
 Execute the project and the output similar to the following will appear:
+
+```shell
+dotnet run --project .\Threads.UsingPools\Threads.UsingPools.csproj
+```
 
 ![using-thread-pools-output](using-thread-pools-output.jpg)
 
@@ -581,24 +613,22 @@ dotnet new console --name Threads.UsingTasks
 dotnet sln add .\Threads.UsingTasks\Threads.UsingTasks.csproj
 ```
 
-- Use the following namespaces in file `Program.cs`:
+- Add the following code to file `Program.cs`:
 
 ```csharp
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-```
 
-- Add method `DoCompute` to class `Program`:
-
-```csharp
-private static int DoCompute(int num, CancellationToken token)
+class Program
 {
-    var managedThreadId = Thread.CurrentThread.ManagedThreadId;
-    var total = 0;
-    for (int i = 0; i < num; i++)
+    private static int DoCompute(int num, CancellationToken token)
     {
-        total += i;
+        var managedThreadId = Thread.CurrentThread.ManagedThreadId;
+        var total = 0;
+        for (int i = 0; i < num; i++)
+        {
+            total += i;
 
 #if (false)
         if (token.IsCancellationRequested)
@@ -609,16 +639,12 @@ private static int DoCompute(int num, CancellationToken token)
         token.ThrowIfCancellationRequested();
 #endif
 
-        Console.WriteLine($"Thread {managedThreadId}, i: {i} total= {total}");
-        Thread.Sleep(100);
+            Console.WriteLine($"Thread {managedThreadId}, i: {i} total= {total}");
+            Thread.Sleep(100);
+        }
+        return total;
     }
-    return total;
-}
-```
 
-- Implement method `Main` in class `Program`:
-
-```csharp
     public static void Main()
     {
         var managedThreadId = Environment.CurrentManagedThreadId;
@@ -626,7 +652,7 @@ private static int DoCompute(int num, CancellationToken token)
         using var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Token.Register(() => Console.WriteLine($"Thread {managedThreadId}: Canceled!"));
         
-        var task = new Task<int>(() => DoCompute(100, cancellationTokenSource.Token), cancellationTokenSource.Token);
+        var task = new Task<int>(() => DoCompute(100, cancellationTokenSource.Token));
         task.Start();
 
         Thread.Sleep(2000);
@@ -644,6 +670,7 @@ private static int DoCompute(int num, CancellationToken token)
             Console.WriteLine($"Thread {managedThreadId} Exception: {exception.Message} ");
         }
     }
+}
 ```
 
 ### **Run Project**
@@ -770,99 +797,89 @@ dotnet new console --name Threads.AsyncAwait
 dotnet sln add Threads.AsyncAwait/Threads.AsyncAwait.csproj
 ```
 
-- Add following namespaces to class `Program`:
+- Add following code to file `Program.cs`:
 
 ```csharp
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-```
 
-- Add following fields to class `Program`:
-
-```csharp
-private const int NumberOfIterations = 100;
-private static readonly Stopwatch stopwatch = new();
-```
-
-- Implement methods `Work` and `WorkAsync` in class `Program` to do blocking call for 100 milliseconds:
-
-```csharp
-private static void Work()
+class Program
 {
-    Task.Delay(WorkDuration).Wait();
-}
+    private const int NumberOfIterations = 10;
+    private static readonly TimeSpan WorkDuration = TimeSpan.FromSeconds(5);
+    private static readonly Stopwatch stopwatch = new();
 
-private static async Task AsyncWork()
-{
-    await Task.Delay(WorkDuration);
-}
-```
-
-- Implement method `DoWorkSynchronously` in class `Program` to do call synchronously method `Work` for `NumberOfIterations` times:
-
-- Implement method `DoWorkParallel` in class `Program`:
-
-```csharp
-private static async Task DoWorkParallel()
-{
-    var tasks = new List<Task>();
-    for (var i = 0; i < NumberOfIterations; i++)
+    private static void Work()
     {
-        var task = new Task(() => Work());
-        task.Start();
-        tasks.Add(task);
+        Task.Delay(WorkDuration).Wait();
     }
-    await Task.WhenAll(tasks);
-}
-```
 
-- Implement method `DoWorkParallelAsync` in class `Program`:
-
-```csharp
-private static async Task DoWorkParallelAsync()
-{
-    var tasks = new List<Task>();
-    for (int i = 0; i < NumberOfIterations; i++)
+    private static async Task AsyncWork()
     {
-        var task = new Task(async () => await WorkAsync());
-        task.Start();
-        tasks.Add(task);
+        await Task.Delay(WorkDuration);
     }
-    await Task.WhenAll(tasks);
-}
-```
 
-- Implement method `Main` in class `Program`:
-
-```csharp
-public static async Task Main()
-{
-    // 20 seconds is getting too long
-    if (NumberOfIterations < 20)
+    private static void DoWorkSynchronously()
     {
+        /* USER CODE HERE */
+    }
+
+    private static async Task DoWorkParallel()
+    {
+        var tasks = new List<Task>();
+        for (var i = 0; i < NumberOfIterations; i++)
+        {
+            var task = new Task(() => Work());
+            task.Start();
+            tasks.Add(task);
+        }
+        await Task.WhenAll(tasks);
+    }
+
+    private static async Task DoWorkParallelAsync()
+    {
+        var tasks = new List<Task>();
+        for (int i = 0; i < NumberOfIterations; i++)
+        {
+            var task = new Task(async () => await AsyncWork());
+            task.Start();
+            tasks.Add(task);
+        }
+        await Task.WhenAll(tasks);
+    }
+
+    public static async Task Main()
+    {
+        // 20 seconds is getting too long
+        if (NumberOfIterations < 20)
+        {
+            Console.WriteLine($"Started synchronous work.");
+            stopwatch.Restart();
+            DoWorkSynchronously();
+            stopwatch.Stop();
+            var syncCodeDuration = stopwatch.Elapsed;
+            Console.WriteLine($"Synchronous code Duration {syncCodeDuration}");
+        }
+
+        if (NumberOfIterations < 2000)
+        {
+            Console.WriteLine($"Started parallel work.");
+            stopwatch.Restart();
+            await DoWorkParallel();
+            stopwatch.Stop();
+            var parallelCodeDuration = stopwatch.Elapsed;
+            Console.WriteLine($"Parallel blocking code duration {parallelCodeDuration}");
+        }
+
+        Console.WriteLine($"Started asynchronous parallel work.");
         stopwatch.Restart();
-        DoWorkSynchronously();
+        await DoWorkParallelAsync();
         stopwatch.Stop();
-        var syncCodeDuration = stopwatch.Elapsed;
-        Console.WriteLine($"Synchronous code Duration {syncCodeDuration}");
+        var asyncParallelCodeDuration = stopwatch.Elapsed;
+        Console.WriteLine($"Asynchronous parallel code duration {asyncParallelCodeDuration}");
     }
-
-    if (NumberOfIterations < 2000)
-    {
-        stopwatch.Restart();
-        await DoWorkParallel();
-        stopwatch.Stop();
-        var parallelCodeDuration = stopwatch.Elapsed;
-        Console.WriteLine($"Parallel blocking code duration {parallelCodeDuration}");
-    }
-
-    stopwatch.Restart();
-    await DoWorkParallelAsync();
-    stopwatch.Stop();
-    var asyncParallelCodeDuration = stopwatch.Elapsed;
-    Console.WriteLine($"Asynchronous parallel code duration {asyncParallelCodeDuration}");
 }
 ```
 
