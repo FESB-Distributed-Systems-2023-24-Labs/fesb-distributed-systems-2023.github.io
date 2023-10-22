@@ -19,7 +19,7 @@
 | Željko Kalajžić      |   H\*  |   +   |       |       |       |       |       |       |       |
 | Damira Mamuzić       |   H    |   +   |       |       |       |       |       |       |       |
 | Kruno Manenica       |   L    |  +++  |       |       |       |       |       |       |       |
-| Ante Marušić         |   L    |   ~   |       |       |       |       |       |       |       |
+| Ante Marušić         |   L    |   +   |       |       |       |       |       |       |       |
 | Luka Nikolac         |   H    |   +   |       |       |       |       |       |       |       |
 | Sara Pavlović        |   L    |   +   |       |       |       |       |       |       |       |
 | Roko Ražov           |   H    |   +   |       |       |       |       |       |       |       |
