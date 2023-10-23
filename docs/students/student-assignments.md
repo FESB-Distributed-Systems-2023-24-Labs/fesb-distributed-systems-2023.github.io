@@ -31,7 +31,7 @@
 | Edita Škec           |   L    |   +   |       |       |       |       |       |       |       |
 | Marin Uzinić         |   L    |   +   |       |       |       |       |       |       |       |
 | Marija Vladimir      |   L    |   +   |       |       |       |       |       |       |       |
-| Filip Volarević      |   H    |   ?   |       |       |       |       |       |       |       |
+| Filip Volarević      |   H    |   +   |       |       |       |       |       |       |       |
 | Jere Zambarlin       |   L    |   *   |       |       |       |       |       |       |       |
 
 -  L = Exercise done in HW  (Applies only to *HW  0*)
