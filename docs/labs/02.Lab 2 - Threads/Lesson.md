@@ -354,70 +354,6 @@ using System.Threading;
 
 namespace Threads.ManagingThreads
 {
-    public class ConcurrentCode
-    {
-        public volatile bool done = false;
-
-        public void SleepWhileCodeIsNotDone()
-        {
-            var managedThreadId = Environment.CurrentManagedThreadId;
-            while (!done)
-            {
-                Console.WriteLine($"SleepWhileCodeIsNotDone ({managedThreadId}): Sleeping for 2s");
-                Thread.Sleep(2000);
-            }
-
-            Console.WriteLine($"SleepWhileCodeIsNotDone ({managedThreadId}): Finished.");
-        }
-
-        public void SleepWhileCancellationIsNotRequested(CancellationToken cancellationToken)
-        {
-            int managedThreadId = Environment.CurrentManagedThreadId;
-
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                Console.WriteLine($"SleepWhileCancellationIsNotRequested ({managedThreadId}): Sleeping for 1s");
-                Thread.Sleep(1000);
-            }
-
-            Console.WriteLine($"SleepWhileCancellationIsNotRequested ({managedThreadId}): Finished.");
-        }
-
-
-        public void DoSleepForLongTime()
-        {
-            int managedThreadId = Thread.CurrentThread.ManagedThreadId;
-
-            var iterations = 10000000;
-
-            Console.WriteLine($"DoSleepForLongTime ({managedThreadId}): Doing work for {iterations} iterations.");
-
-            Thread.SpinWait(iterations);
-
-            try
-            {
-                Console.WriteLine($"DoSleepForLongTime ({managedThreadId}): Going to sleep for very long time!");
-                Thread.Sleep(Timeout.Infinite);
-            }
-            catch (ThreadInterruptedException e)
-            {
-                Console.WriteLine($"DoSleepForLongTime ({managedThreadId}): Sleep interupted!");
-                Console.WriteLine($"DoSleepForLongTime ({managedThreadId}): Exception: {e.Message}");
-                Console.WriteLine($"DoSleepForLongTime ({managedThreadId}): Finished.");
-            }
-        }
-    }
-}
-```
-
-- Implement Class Program, as follows:
-
-```csharp
-using System;
-using System.Threading;
-
-namespace Threads.ManagingThreads
-{
     public static class Program
     {
         public static void Main()
@@ -425,42 +361,29 @@ namespace Threads.ManagingThreads
             int mid = Thread.CurrentThread.ManagedThreadId;
             Console.WriteLine("Primary Thread ({0}) ", mid);
 
-            var delay = TimeSpan.FromSeconds(10);
-            var cancellationTokeSource = new CancellationTokenSource(delay);
-
+            Thread workerThread;
             var code = new ConcurrentCode();
-            var threads = new[]
-            {
-                new Thread(new ThreadStart(code.SleepWhileCodeIsNotDone)),
-                // new Thread(() => code.SleepWhileCancellationIsNotRequested(cancellationTokeSource.Token)),
-                // new Thread(code.DoSleepForLongTime),
-            };
+
+            workerThread = new Thread (code.SleepWhileCodeIsNotDone);
+            workerThread.Start();
+            Thread.Sleep(5000); // Wait some time
+            code.done = true;
+            workerThread.Join();
+
+            // Token that will self-cancel after 3 seconds
+            var cancelTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(3)); 
+            // Action that will be executed when cancelation is requested
+            cancelTokenSource.Token.Register(() => { Console.WriteLine("Cancelation token activated!"); }); 
+            workerThread = new Thread(() => { code.SleepWhileCancellationIsNotRequested(cancelTokenSource.Token); });
+            workerThread.Start();
+            workerThread.Join();
 
 
-            foreach (var thread in threads)
-            {
-                thread.Start();
-            }
-
-            Thread.Sleep(3000);
-
-            foreach (var thread in threads)
-            {
-                if (thread.IsAlive)
-                {
-                    Console.WriteLine($"Primary: Thread {thread.ManagedThreadId} is alive.");
-                }
-            }
-
-            // TODO: Stop the threads (in code or debugger)
-            Thread.Sleep(TimeSpan.FromSeconds(10));
-            // code.done = true;
-            // threads[2].Interrupt();
-
-            foreach (var thread in threads)
-            {
-                thread.Join();
-            }
+            workerThread = new Thread(code.DoSleepForLongTime); // Create an infinite thread
+            workerThread.Start();
+            Thread.Sleep(5000); // Wait some time
+            workerThread.Interrupt();
+            workerThread.Join();
 
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Main: All threads have terminated.");
@@ -622,52 +545,82 @@ using System.Threading.Tasks;
 
 class Program
 {
-    private static int DoCompute(int num, CancellationToken token)
+    private static int DoComputeSum(int num)
     {
         var managedThreadId = Thread.CurrentThread.ManagedThreadId;
         var total = 0;
         for (int i = 0; i < num; i++)
         {
             total += i;
-
-#if (false)
-        if (token.IsCancellationRequested)
-        {
-            break;
-        } 
-#else
-        token.ThrowIfCancellationRequested();
-#endif
-
             Console.WriteLine($"Thread {managedThreadId}, i: {i} total= {total}");
             Thread.Sleep(100);
         }
         return total;
     }
 
+    private static void DoVeryLongAction_NoThrow(CancellationToken token)
+    {
+        Console.WriteLine("Started very long action.");
+
+        while (true)
+        {
+            if (token.IsCancellationRequested)
+            {
+                break;
+            }
+            Console.WriteLine("Still performing the action...");
+            Thread.Sleep(1000);
+        }
+
+        Console.WriteLine("Action interrupted!");
+    }
+
+    private static void DoVeryLongAction_ThrowException(CancellationToken token)
+    {
+        Console.WriteLine("Started very long action.");
+
+        while (true)
+        {
+            token.ThrowIfCancellationRequested();
+            Console.WriteLine("Still performing the action...");
+            Thread.Sleep(1000);
+        }
+
+        Console.WriteLine("Action interrupted!");
+    }
+
     public static void Main()
     {
         var managedThreadId = Environment.CurrentManagedThreadId;
         
-        using var cancellationTokenSource = new CancellationTokenSource();
-        cancellationTokenSource.Token.Register(() => Console.WriteLine($"Thread {managedThreadId}: Canceled!"));
-        
-        var task = new Task<int>(() => DoCompute(100, cancellationTokenSource.Token));
+        /* Waiting for a simple task to finish */
+        var task = new Task<int>(() => DoComputeSum(100));
         task.Start();
+        task.Wait();
+        Console.WriteLine($"Task finished with the result: '{task.Result}' ");
 
-        Thread.Sleep(2000);
+        /* Interrupting tasks */
+        Task veryLongTask;
+        CancellationTokenSource cancelTokenSource;
 
-        cancellationTokenSource.Cancel();
+        // Interrupting by setting a flag
+        cancelTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        veryLongTask = new Task(() => { DoVeryLongAction_NoThrow(cancelTokenSource.Token); });
+        veryLongTask.Start();
+        veryLongTask.Wait();
 
+        // Interrupting by throwing an execption
+        cancelTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        veryLongTask = new Task(() => { DoVeryLongAction_ThrowException(cancelTokenSource.Token); });
+        veryLongTask.Start();
         try
         {
-            task.Wait();
-            var result = task.Result;
-            Console.WriteLine($"Thread {managedThreadId} result: {result}");
+            veryLongTask.Wait();
+            Console.WriteLine("Task exited without problems.");
         }
-        catch (AggregateException exception)
+        catch (AggregateException ex)
         {
-            Console.WriteLine($"Thread {managedThreadId} Exception: {exception.Message} ");
+            Console.WriteLine($"Caught exception: '{ex.Message}' from: \n{ex.StackTrace}");
         }
     }
 }
@@ -698,74 +651,91 @@ dotnet new console --name Threads.ProvokingRaces
 dotnet sln add Threads.ProvokingRaces/Threads.ProvokingRaces.csproj
 ```
 
-- Add following namespaces to class `Program`
+- Add following code to file `Program.cs`
 
 ```csharp
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-```
+using System.Diagnostics;
 
-- Add fields to class `Program`
-
-```csharp
-private const int IncrementAmount = 10000;
-private static int sum = 0;
-private static readonly object incrementLock = new();
-```
-
-- Implement Method `IncrementSumSynchronously` in class `Program`:
-
-```csharp
-private static void IncrementSumSynchronously()
+class Program
 {
-    for (var i = 0; i < IncrementAmount; i++)
-    {
-        sum++;
-    }
-    Console.WriteLine($"Sum value: {sum}");
-}
-```
+    private const int IncrementAmount = 10000;
+    private static int sum = 0;
+    private static readonly object incrementLock = new();
+    private static readonly Stopwatch stopwatch = new();
 
-- Implement Method `IncrementSumParallel` in class `Program`:
-
-```csharp
-private static void IncrementSumParallel()
-{
-    var allIncrementTasks = new List<Task>();
-    for (var i = 0; i < IncrementAmount; i++)
+    private static void IncrementSumSynchronously()
     {
-#if(true)
-        var incrementTask = new Task(() => sum++);
-#else
-        var incrementTask = new Task(() =>
+        Console.WriteLine("Incrementing sum synchronously");
+
+        stopwatch.Restart();
+        for (var i = 0; i < IncrementAmount; i++)
         {
-            lock (incrementLock)
-            {
-                sum++;
-            }
-        });
-#endif
-        incrementTask.Start();
-        allIncrementTasks.Add(incrementTask);
+            sum++;
+        }
+        stopwatch.Stop();
+
+        Console.WriteLine($"Duration: {stopwatch.Elapsed}, Sum value: {sum}");
     }
 
-    var allTasksFinishedTask = Task.WhenAll(allIncrementTasks);
+    private static void IncrementSumParallel_NoLock()
+    {
+        Console.WriteLine("Incrementing sum parallel");
 
-    allTasksFinishedTask.Wait();
+        var allIncrementTasks = new List<Task>();
 
-    Console.WriteLine($"Sum value: {sum}");
-}
-```
+        stopwatch.Restart();
+        for (var i = 0; i < IncrementAmount; i++)
+        {
+            var incrementTask = new Task(() => sum++);
+            incrementTask.Start();
+            allIncrementTasks.Add(incrementTask);
+        }
 
-- Implement Method `Main` in class `Program`:
+        var allTasksFinishedTask = Task.WhenAll(allIncrementTasks);
+        allTasksFinishedTask.Wait();
+        stopwatch.Stop();
 
-```csharp
-public static void Main()
-{
-    IncrementSumSynchronously();
-    sum = 0;
-    IncrementSumParallel();
+        Console.WriteLine($"Duration: {stopwatch.Elapsed}, Sum value: {sum}");
+    }
+
+    private static void IncrementSumParallel_WithLock()
+    {
+        Console.WriteLine("Incrementing sum parallel WITH a lock");
+
+        var allIncrementTasks = new List<Task>();
+
+        stopwatch.Restart();
+        for (var i = 0; i < IncrementAmount; i++)
+        {
+            var incrementTask = new Task(() =>
+            {
+                lock (incrementLock)
+                {
+                    sum++;
+                }
+            });
+            incrementTask.Start();
+            allIncrementTasks.Add(incrementTask);
+        }
+
+        var allTasksFinishedTask = Task.WhenAll(allIncrementTasks);
+        allTasksFinishedTask.Wait();
+        stopwatch.Stop();
+
+        Console.WriteLine($"Duration: {stopwatch.Elapsed}, Sum value: {sum}");
+    }
+
+    public static void Main()
+    {
+        IncrementSumSynchronously();
+        sum = 0;
+        IncrementSumParallel_NoLock();
+        sum = 0;
+        IncrementSumParallel_WithLock();
+    }
 }
 ```
 
@@ -808,14 +778,13 @@ using System.Threading.Tasks;
 class Program
 {
     private const int NumberOfIterations = 10;
+    private const int ThreadPoolSize = 2;
     private static readonly TimeSpan WorkDuration = TimeSpan.FromSeconds(5);
     private static readonly Stopwatch stopwatch = new();
-
     private static void Work()
     {
         Task.Delay(WorkDuration).Wait();
     }
-
     private static async Task AsyncWork()
     {
         await Task.Delay(WorkDuration);
@@ -823,7 +792,33 @@ class Program
 
     private static void DoWorkSynchronously()
     {
-        /* USER CODE HERE */
+        for (var i = 0; i < NumberOfIterations; i++)
+        {
+            Work();
+        }
+    }
+
+    private static void DoWorkOnSeparateThreads()
+    {
+        var threads = new List<Thread>();
+        for (var i = 0; i < NumberOfIterations; i++)
+        {
+            var thread = new Thread(Work);
+            threads.Add(thread);
+            thread.Start();
+        }
+        
+        threads.ForEach(t => t.Join());
+    }
+
+    private static void DoWorkOnThreadPool()
+    {
+        using var finishedCounter = new CountdownEvent(NumberOfIterations);
+
+        var options = new ParallelOptions();
+        options.MaxDegreeOfParallelism = ThreadPoolSize;
+
+        _ = Parallel.For(0, NumberOfIterations, options, (_) => { Work(); });
     }
 
     private static async Task DoWorkParallel()
@@ -852,26 +847,33 @@ class Program
 
     public static async Task Main()
     {
-        // 20 seconds is getting too long
-        if (NumberOfIterations < 20)
-        {
-            Console.WriteLine($"Started synchronous work.");
-            stopwatch.Restart();
-            DoWorkSynchronously();
-            stopwatch.Stop();
-            var syncCodeDuration = stopwatch.Elapsed;
-            Console.WriteLine($"Synchronous code Duration {syncCodeDuration}");
-        }
+        Console.WriteLine($"Started synchronous work.");
+        stopwatch.Restart();
+        DoWorkSynchronously();
+        stopwatch.Stop();
+        var syncCodeDuration = stopwatch.Elapsed;
+        Console.WriteLine($"Synchronous code Duration {syncCodeDuration}");
 
-        if (NumberOfIterations < 2000)
-        {
-            Console.WriteLine($"Started parallel work.");
-            stopwatch.Restart();
-            await DoWorkParallel();
-            stopwatch.Stop();
-            var parallelCodeDuration = stopwatch.Elapsed;
-            Console.WriteLine($"Parallel blocking code duration {parallelCodeDuration}");
-        }
+        Console.WriteLine($"Started multi threaded work.");
+        stopwatch.Restart();
+        DoWorkOnSeparateThreads();
+        stopwatch.Stop();
+        var multiThreadCodeDuration = stopwatch.Elapsed;
+        Console.WriteLine($"Multi threaded Duration {multiThreadCodeDuration}");
+
+        Console.WriteLine($"Started thread pool work.");
+        stopwatch.Restart();
+        DoWorkOnThreadPool();
+        stopwatch.Stop();
+        var threadPoolDuration = stopwatch.Elapsed;
+        Console.WriteLine($"Thread pool code Duration {threadPoolDuration}");
+
+        Console.WriteLine($"Started parallel work.");
+        stopwatch.Restart();
+        await DoWorkParallel();
+        stopwatch.Stop();
+        var parallelCodeDuration = stopwatch.Elapsed;
+        Console.WriteLine($"Parallel blocking code duration {parallelCodeDuration}");
 
         Console.WriteLine($"Started asynchronous parallel work.");
         stopwatch.Restart();
