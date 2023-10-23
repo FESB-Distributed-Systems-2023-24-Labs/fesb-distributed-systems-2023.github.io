@@ -13,8 +13,8 @@
 | Matej Baljak         |   L    |   +   |       |       |       |       |       |       |       |
 | Ante Bilić           |   H    |   +   |       |       |       |       |       |       |       |
 | Karlo Čarija         |   H    |   +   |       |       |       |       |       |       |       |
-| Martin Čelar         |   L    |       |       |       |       |       |       |       |       |
-| Bruno Grbavac        |   L    |   ~   |       |       |       |       |       |       |       |
+| Martin Čelar         |   L    |   +   |       |       |       |       |       |       |       |
+| Bruno Grbavac        |   L    |   +   |       |       |       |       |       |       |       |
 | Robert Jukić-Bračulj |        |   \*  |       |       |       |       |       |       |       |
 | Željko Kalajžić      |   H\*  |   +   |       |       |       |       |       |       |       |
 | Damira Mamuzić       |   H    |   +   |       |       |       |       |       |       |       |
@@ -29,9 +29,9 @@
 | Ivan Stojković       |   L    |   +   |       |       |       |       |       |       |       |
 | Luka Svaguša         |   L    |  +++  |       |       |       |       |       |       |       |
 | Edita Škec           |   L    |   +   |       |       |       |       |       |       |       |
-| Marin Uzinić         |   L    |       |       |       |       |       |       |       |       |
+| Marin Uzinić         |   L    |   +   |       |       |       |       |       |       |       |
 | Marija Vladimir      |   L    |   +   |       |       |       |       |       |       |       |
-| Filip Volarević      |   H    |       |       |       |       |       |       |       |       |
+| Filip Volarević      |   H    |   ?   |       |       |       |       |       |       |       |
 | Jere Zambarlin       |   L    |   *   |       |       |       |       |       |       |       |
 
 -  L = Exercise done in HW  (Applies only to *HW  0*)
