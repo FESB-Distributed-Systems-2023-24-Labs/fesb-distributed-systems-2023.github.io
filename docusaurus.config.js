@@ -60,6 +60,12 @@ const config = {
             position: 'left',
           },
           {
+            type: 'doc',
+            docId: 'students/homework-assignments',
+            label: 'Homework Assignments',
+            position: 'left',
+          },
+          {
             href: 'https://github.com/fesb-distributed-systems-2023/fesb-distributed-systems-2023.github.io',
             label: 'GitHub',
             position: 'right',
