@@ -11,6 +11,19 @@
 ### **StudentController.cs**
 
 ```csharp
+/*
+ **********************************
+ * Author: Petar Kaselj
+ * Project Task: University
+ **********************************
+ * Description:
+ *  A program that has a list of all students in the university.
+ *  The program has endpoints to:
+ *      1. Get all students
+ *      2. Get a specific student by his/her index in 3 different ways
+ **********************************
+ */
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
