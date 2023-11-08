@@ -20,7 +20,7 @@
 | Damira Mamuzić       |   H    |   +   |      |
 | Kruno Manenica       |   L    |  +++  |      |
 | Ante Marušić         |   L    |   +   |      |
-| Luka Nikolac         |   H    |   +   |      |
+| Luka Nikolac         |   H    |   +   |  +++ |
 | Sara Pavlović        |   L    |   +   |      | 
 | Roko Ražov           |   H    |   +   |      |
 | Josip Sanader        |   L    |   +   |      |
