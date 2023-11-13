@@ -33,7 +33,7 @@
 
 # Homeworks
 
-## Homework 2
+## Homework 2 - Web API Basics
 
 ### General (Important)
 
@@ -411,4 +411,77 @@ Use the following template:
     - Endpoint 3:
       - Takes *one* parameter (Country name) from *Body*
       - Returns a response with status 200 OK and a text `"Hello from {Country name} Country!"`
+
+## Homework 3 - Domain-specific Web API with CRUD interface
+
+### General
+
+> **IMPORTANT:** This paragraph applies to all students and homeworks
+
+- Write a comment at the top of **EACH FILE YOU CREATE** where you state:
+  - Your name
+  - Your task
+  - A few senteces explaining what does your program do
+
+Use the following template:
+
+```csharp
+/*
+ **********************************
+ * Author: <Your Name>
+ * Project Task: Homework 3 - <Your Domain>
+ **********************************
+ * Description:
+ *  
+ *  <Write a few senteces explaining what does this class do>
+ *
+ **********************************
+ */
+```
+
+
+> **IMPORTANT:** For an example see [Lab 5 - Controller Example](../labs/05.Lab%205%20-%20HTTP%20Programming/Controller%20Example.md) and for help with creating a project and/or a controller see [Lab 5 - Creating a Web API](../labs/05.Lab%205%20-%20HTTP%20Programming/Creating%20a%20Web%20API.md).
+
+> **IMPORTANT:** All rules **MUST** be abided by, especially the [**Coding Convention**](../labs/Notes/Coding%20Convention.md)
+
+> **NOTE:** *Endpoints* are "functions" that are called when a request with specific route is received. In the example above ([Lab 5 - Controller Example](../labs/05.Lab%205%20-%20HTTP%20Programming/Controller%20Example.md)), the *endpoints* are functions `GetStudents()`, `GetStudentByIndexFromRoute()`, `GetStudentByIndexFromQuery`, `GetStudentByIndexFromBody`. Each *endpoint* has its own unique route e.g. `/students`, `/student/{id}`, ...
+
+
+
+### [HW3] Phase 1
+- **Project Task:** Model Definition
+- **Result:** A defined domain model
+- **Requirements:**
+	- Create a domain model for the application
+	- Domain model **MUST** have *at least* 6 properties, of which *at least* 3 are domain properties.
+	- Domain model **MUST** have at least one unique field e.g. ID.
+	- Domain model must be a separate class inside a folder named *Domain*
+	- Create a Pull Request to indicate completion
+- **Deadline:** Friday, November 17th, 2023
+
+### [HW3] Phase 2
+- **Project Task:** Controller and Persistence Implementation
+- **Result:** A working domain-specific Web API implementing CRUD interface
+- **Requirements:**
+	- Create a controller and place it in a folder named *Controllers*
+	- Define 5 endpoints, one endpoint for each of the following CRUD operations
+		- **Create** - Create a new model and insert it into storage
+		- **Read All** - Get a collection of *all* models in storage
+		- **Read Specific** - Get a model from storage by providing a unique identifier to the API
+		- **Update** - Apply changes to a specific model in storage, identified by a unique value
+		- **Delete** - Delete a specific model from storage, identified by a unique value
+	- All routes, methods and classes **MUST** have meaningful names
+	- Controller endpoints **MUST** be devoid of any logic, be thin and forward all calls to the *Persistence* layer
+	- Create a model repository interface and a class that implements that interface
+	- A repository instance **MUST** be passed to the controller using *Dependency Injection* mechanism.
+	- Test all endpoints using a tool e.g. *Postman*
+	- Create a Pull Request to indicate completion
+- **Deadline:** Monday, December 4th, 2023
+
+
+
+
+
+
+
 
