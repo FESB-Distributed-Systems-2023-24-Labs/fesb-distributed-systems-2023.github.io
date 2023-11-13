@@ -372,7 +372,7 @@ ConcurrentCode object, object2;
 - **RULE 11** - Good comment answers the question *WHY?* Bad comment answers the question *WHAT?*
 
 ```diff
-+ GOOD
+- BAD
 ```
 ```csharp
 public static void Main()
@@ -385,7 +385,7 @@ public static void Main()
 ```
 
 ```diff
-- BAD
++ GOOD
 ```
 ```csharp
 public static void Main()
