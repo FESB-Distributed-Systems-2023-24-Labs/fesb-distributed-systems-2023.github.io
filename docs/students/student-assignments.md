@@ -1,4 +1,4 @@
-# Student Assignments
+﻿# Student Assignments
 
 ## Homeworks
 
@@ -10,28 +10,28 @@
 
 | Name                 | HW  0  | HW  1 |HW  2 |
 | -------------------- | ------ | ----- |----- |
-| Matej Baljak         |   L    |   +   |  \*  |
-| Ante Bilić           |   H    |   +   |      |
-| Karlo Čarija         |   H    |   +   |      |
-| Martin Čelar         |   L    |   +   |      |
-| Bruno Grbavac        |   L    |   +   |      |
-| Robert Jukić-Bračulj |        |   \*  |  \*  |
-| Željko Kalajžić      |   H\*  |   +   |      |
-| Damira Mamuzić       |   H    |   +   |      |
-| Kruno Manenica       |   L    |  +++  |      |
-| Ante Marušić         |   L    |   +   |      |
-| Luka Nikolac         |   H    |   +   |  +++ |
-| Sara Pavlović        |   L    |   +   |      | 
-| Roko Ražov           |   H    |   +   |      |
-| Josip Sanader        |   L    |   +   |      |
-| Emilija Sarić        |   L    |   +   |      |
-| Tihana Slavić        |   L    |   +   |      |
-| Ivan Stojković       |   L    |   +   |      |
-| Luka Svaguša         |   L    |  +++  |      |
-| Edita Škec           |   L    |   +   |      |
-| Marin Uzinić         |   L    |   +   |      |
-| Marija Vladimir      |   L    |   +   |      |
-| Filip Volarević      |   H    |   +   |      |
+| Matej Baljak         |   L    |   +   |  \*+ |
+| Ante Bilić           |   H    |   +   |  +   |
+| Karlo Čarija         |   H    |   +   | +    |
+| Martin Čelar         |   L    |   +   |  +   |
+| Bruno Grbavac        |   L    |   +   |  +   |
+| Robert Jukić-Bračulj |        |   \*+ | \*+  |
+| Željko Kalajžić      |   H\*  |   +   |   +  |
+| Damira Mamuzić       |   H    |   +   |   +  |
+| Kruno Manenica       |   L    |  +++  |  +   |
+| Ante Marušić         |   L    |   +   |  +   |
+| Luka Nikolac         |   H    |   +   |  +   |
+| Sara Pavlović        |   L    |   +   |  +   | 
+| Roko Ražov           |   H    |   +   |  +   |
+| Josip Sanader        |   L    |   +   |   +  |
+| Emilija Sarić        |   L    |   +   |  +   |
+| Tihana Slavić        |   L    |   +   |  +   |
+| Ivan Stojković       |   L    |   +   | +    |
+| Luka Svaguša         |   L    |  +++  | +    |
+| Edita Škec           |   L    |   +   |  +   |
+| Marin Uzinić         |   L    |   +   |  +   |
+| Marija Vladimir      |   L    |   +   |  +   |
+| Filip Volarević      |   H    |   +   |  +   |
 | Jere Zambarlin       |   L    |   *   |  \*  |
 
 -  L = Exercise done in HW  (Applies only to *HW  0*)
