@@ -5,7 +5,7 @@
 - [Homework Assignments](#homework-assignments)
   - [Table of Contents](#table-of-contents)
 - [Homeworks](#homeworks)
-  - [Homework 2](#homework-2)
+  - [Homework 2 - Web API Basics](#homework-2---web-api-basics)
     - [General (Important)](#general-important)
     - [\[HW2\] Matej Baljak\*](#hw2-matej-baljak)
     - [\[HW2\] Ante Bilić](#hw2-ante-bilić)
@@ -30,6 +30,14 @@
     - [\[HW2\] Marija Vladimir](#hw2-marija-vladimir)
     - [\[HW2\] Filip Volarević](#hw2-filip-volarević)
     - [\[HW2\] Jere Zambarlin\*](#hw2-jere-zambarlin)
+  - [Homework 3 - Domain-specific Web API with CRUD interface](#homework-3---domain-specific-web-api-with-crud-interface)
+    - [General](#general)
+    - [\[HW3\] Phase 1](#hw3-phase-1)
+    - [\[HW3\] Phase 2](#hw3-phase-2)
+  - [Homework 4 - SQL](#homework-4---sql)
+    - [General](#general-1)
+    - [Task](#task)
+    - [Hints](#hints)
 
 # Homeworks
 
@@ -478,10 +486,57 @@ Use the following template:
 	- Create a Pull Request to indicate completion
 - **Deadline:** Monday, December 4th, 2023
 
+## Homework 4 - SQL
+
+### General
+
+Databases are used to **persistently** store, load and search data in a Web API, among other things.
+
+The advantages of using databases are:
+- Data persistency (Data can be saved and reloaded after the application/WebAPI is shut-down and restarted)
+- Speed (Load, Store, Search) (Databases keep track of data in a way that allows for fast access and filtering)
+- Size (Databases can be optimized to save space on memory constrained devices)
+- SQL - A language that is used to read, write, delete, update and filter data from a database. Many databases *understand* SQL languages, which makes it easy for developers to switch between multiple databases.
+
+[SQLite](https://www.sqlite.org/index.html) is a type of an SQL database, it defines how the data will be stored in the database file. On the other hand [DB Browser for SQLite](https://sqlitebrowser.org/dl/) is an application that takes SQL language query and executes it on the database.
+
+### Task
+
+- **Project Task:** SQL Table Definition
+- **Result:** An SQLite database with a table representing a model
+- **Requirements:**
+  - Download *DB Browser for SQLite* from [LINK](https://sqlitebrowser.org/dl/)
+  - In your last homework (HW-03) repository:
+    - Create a new folder called *SQL*
+  - Open the *DB Browser*:
+    - In the *DB Browser* create a new database called *database.db* and save it to the *SQL* folder
+    - In the *DB Browser* create a new table for your model and give it an appropriate name e.g. *Emails* if your model was `class Email`. Add a column to your table for each property of your model. **NOTE:** do not forget to mark *ID* column as *Non Null (NN)*, *Autoincrement (AI)*, *Primary Key (PK)* and *Unique (U)*
+    - Go to the *Execute SQL* tab and write following queries:
+      - Write a query that adds at least 3 rows to your table. Save the query in your repository in *SQL* folder as a text file called *Create<Model\>.sql* (e.g. *CreateEmail.sql* if your model was `class Email`). **NOTE:** When adding a model using SQL, do not manually enter ID value, the database will automatically generate it.
+      - Write a query that list some rows of the table. **Add at least one condition in the query using WHERE keyword**. Save the query as *Read<Model\>.sql*. **NOTE:** Do not use \* in this query to display all columns, instead, list all columns manually.
+      - Write a query that updates some fields of a row in the table. Save the query as *Update<Model\>.sql*
+      - Write a query that deletes one or more rows from a table based on some condition. Save the query as *Delete<Model\>.sql*
+    - After finishing the previous steps, go to the *DB Browser* and go to *Database Structure* tab. Right click on the table and click *Modify table*. After a windows pops up, copy the SQL code from the bottom of the window to a new text file in your *SQL* folder and name it *CreateTable<Model\>.sql*. 
+    - **Before closing the DB Browser, do not forget to save the database**
+- **Deadline:** Monday, December 18th, 2023
+- **Useful Links:**
+  - [SQLite Database Project Home Page](https://www.sqlite.org/index.html)
+  - [W3Schools](https://www.w3schools.com/sql/default.asp)
+
+### Hints
+
+Creating a database:
+![hw04-01-create-db](./hw04-01-create-db.PNG)
 
 
+Creating a table:
+![hw04-02-create-table](./hw04-02-create-table.PNG)
 
 
+Executing a query:
+![hw04-03-write-query](./hw04-03-write-query.PNG)
 
+Saving the database:
+![hw04-04-save-db](./hw04-04-save-db.PNG)
 
 
