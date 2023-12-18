@@ -38,6 +38,9 @@
     - [General](#general-1)
     - [Task](#task)
     - [Hints](#hints)
+  - [Homework 4 - SQL Repository](#homework-4---sql-repository)
+    - [General](#general-2)
+    - [Task](#task-1)
 
 # Homeworks
 
@@ -540,3 +543,29 @@ Saving the database:
 ![hw04-04-save-db](./hw04-04-save-db.PNG)
 
 
+## Homework 4 - SQL Repository
+
+### General
+
+In this homework, students will learn how to access and perform CRUD operations on an SQLite database from the WebAPI. Students will also learn *how*, *why* and *when* interfaces are used.
+
+### Task
+
+- **Project Task:** SQL Repository
+- **Result:** WebAPI that stores data in a database
+- **Requirements:**
+  - Create a database **for your model**. The database from the last homework can be used, some might need to be extended.
+  - Extract an interface from the current *Repository* class.
+    - Change the *Controller* to use the interface.
+    - Change the *Program.cs* to provide a concrete class instead of an interface.
+    - Refer to the commit: [`Extracted interface for EmailRepository`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/commit/2371cdae1dee33cbe8a23cc6748a4207f8ccdd40)
+  - Create a new class *<Model\>Respository_SQL* that inherits the interface. 
+  - Install `Microsoft.Data.Sqlite` from NuGet package manager
+    - Refer to the comments in the commit: [`Installed Sqlite NuGet package. Implemented AddEmail()`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/commit/2ea3d22d517d0c7bf540c48a752bba5dace8d431)
+  - Implement all functions in the new *<Model\>Respository_SQL* class
+    - Refer to the commit: [`Implemented rest of the EmailRepository_SQL`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/commit/1fda69ecad26d54816e85f41b19990a345c7f5e2)
+- **Deadline:** Monday, December 18th, 2023
+- **Useful Links:**
+  - [Github Repository - pkasel lab 07+ - branch master_SQL](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/tree/master_SQL)
+  - [W3Schools SQL](https://www.w3schools.com/sql/default.asp)
+  - [SQLite Database Project Home Page](https://www.sqlite.org/index.html)
