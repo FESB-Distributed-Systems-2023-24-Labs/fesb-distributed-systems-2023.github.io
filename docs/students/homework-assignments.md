@@ -41,6 +41,9 @@
   - [Homework 4 - SQL Repository](#homework-4---sql-repository)
     - [General](#general-2)
     - [Task](#task-1)
+  - [Homework 6 - Business Logic](#homework-6---business-logic)
+    - [General](#general-3)
+    - [Task](#task-2)
 
 # Homeworks
 
@@ -569,3 +572,72 @@ In this homework, students will learn how to access and perform CRUD operations 
   - [Github Repository - pkasel lab 07+ - branch master_SQL](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/tree/master_SQL)
   - [W3Schools SQL](https://www.w3schools.com/sql/default.asp)
   - [SQLite Database Project Home Page](https://www.sqlite.org/index.html)
+
+
+## Homework 6 - Business Logic
+
+### General
+
+In this homework, students will implement a class for handling *business logic* in their application. So far, the WebAPI consists of two components (called *layers*): *Controller* (also called *Presentation Layer*, *View Layer*) and *Repository* (also called *Persistence Layer*, *Data Access Layer (DAL)*). Both of these layers have their responsibilities. *Controller* acts as a medaitor between user or frontend and the WebAPI backend. It exposes endpoints so the user can interact with the WebAPI and it translates user data into a format usable by the WebAPI (DTO to Model and vice versa). On the other hand the responsibility of the *Repository* class is to take a model and save it somwhere so it can be accessed later. It acts as an interface between the application and the database:
+- a traditional database such as SQLite, MSSql
+- a NoSQL database such as MongoDB
+- a plain text or binary file
+- other services (MQRabbit, Apache Kafka)
+
+Since the controller only takes input from the user and the repository only saves that input into a database, the application is *dumb*. It can only save and retrieve data. Using this application in real world (*in production*) would result in major problems. Take for example an email application:
+- What if user chooses a weak password e.g. no numbers and no special characters?
+- What if user enters 'abcxyz' as an email?
+- What if user leaves the subject field empty? Should this be allowed?
+- What if user tries to send a 10GB file as an attachment?
+- What if the user tries to send an email to nonexistent recipient?
+  - Should the application crash?
+  - Should the application ignore the error silently?
+  - Should the application ignore the email and warn the user?
+- Should the application permanently delete an email? Could the application allow the user to undo deletion?
+All of these questions have to be addressed in the code. The problem is where should the programmer put that code? The controller? But the controller only takes user data and forwards it to the application. It is good practice to keep the controller *thin* (i.e. small). Should that code be put in the repository? A valid idea, but maybe sometime in the future, the programmer will want to use the different database (maybe the application will become popular and will need better databases). In that case the programmer will have to write a new repository for the new database and copy most of the code to the new repository class.
+
+This is also a valid idea, but it raises two questions:
+1. Why do we need to copy something? Can't code be shared?
+2. If the repository only saves data into a database, why do we write code to check if user's password is weak/strong?
+
+To address this, we introduce another *component/layer* between the *Controller* and the *Repository*. This component is called *Logic* (also called *Bussines Logic*, *Domain Logic*). Intead of directly accessing the *Repository*, the *Controller* will now access *Logic*, which will then perform some checks and if, and only if, those checks success, the *Logic* will access (write/read) the *Repository* i.e. we sandwich the *Logic* between *Controller* and *Repository*.
+
+In the case of email application, the *Logic* will have similar methods/functions as the *Repository*.
+For more information see [`pkaselj lab 07+ tag 5.0.0`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/tree/5.0.0) especially the [`Logic/EmailLogic.cs`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/5.0.0/Logic/EmailLogic.cs).
+
+### Task
+
+- **Project Task:** Business Logic
+- **Result:** A simple HTML/CSS/JS frontend for the web application
+- **Requirements:**
+  1. Create a DTO object for your model.
+      - Place DTO models in Controller/DTO folder.
+      - Update Controller to send/receive DTOs instead of Models.
+      - Do not forget to transform DTO to Model and/or Model to DTO in your controller.
+      - Refer to the [`Model/Email.cs`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/5.0.0/Models/Email.cs) and [`Controller/`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/tree/5.0.0/Controllers/DTO)
+  2. Create a custom exception class
+      -  Name it `LogicException`
+      -  Place it into `Exceptions/` folder.
+      -  Refer to the [`Exceptions/UserErrorMessage`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/5.0.0/Exceptions/UserErrorMessage.cs)
+  3. Create a *Logic* class and its interface.
+      - Name it `<Domain>Logic.cs` (e.g. `EmailLogic.cs`)
+      - Name the interface `I<Domain>Logic.cs` (e.g. `IEmailLogic.cs`) 
+      - Do not forget to register the service in [`Program.cs`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/a56389c6678bb49b05173298c2f45d4f520a1e55/Program.cs#L13)
+  4. Implement some logic e.g.:
+     - Field validation (fields cannot be empty, too long, too short, etc.)
+     - Throw `LogicException` if validation fails
+  5. Add a `filter` to the controller.
+      - Create a new class called `ErrorFilter.cs` in folder `Filters`.
+      - Copy the class logic from [`Filters/LogFilter.cs` from pkaselj lab 07+](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/5.0.0/Filters/LogFilter.cs) **NOTE: Copy only the class (from line 8 to line 57 inclusive). Change the class name to `ErrorFilter` and change the [line 28](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/a56389c6678bb49b05173298c2f45d4f520a1e55/Filters/LogFilter.cs#L28) to `if(context.Exception.GetType() == typeof(LogicException))`**
+      - Above your controller add the line `[ErrorFilter]` as in [`Controllers/EmailController.cs`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/a56389c6678bb49b05173298c2f45d4f520a1e55/Controllers/EmailController.cs#L14)
+- **Deadline:** Friday, January 19th, 2024
+- **Useful Links:**
+  - [Github Repository - pkasel lab 07+ - tag 5.0.0](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/tree/5.0.0)
+  - [W3Schools HTML How-To Section](https://www.w3schools.com/howto/default.asp)
+  - [W3Schools HTML](https://www.w3schools.com/html/)
+  - [W3Schools HTML Tags](https://www.w3schools.com/tags/default.asp)
+  - [W3Schools HTML Attributes](https://www.w3schools.com/tags/ref_attributes.asp)
+  - [W3Schools HTML Examples](https://www.w3schools.com/html/html_examples.asp)
+  - [W3Schools CSS](https://www.w3schools.com/css/default.asp)
+  - [W3Schools JS](https://www.w3schools.com/js/default.asp)
+
