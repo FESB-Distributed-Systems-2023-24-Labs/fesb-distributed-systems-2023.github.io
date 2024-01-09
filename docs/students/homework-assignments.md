@@ -44,6 +44,9 @@
   - [Homework 6 - Business Logic](#homework-6---business-logic)
     - [General](#general-3)
     - [Task](#task-2)
+  - [Homework 7 - Frontend](#homework-7---frontend)
+    - [General](#general-4)
+    - [Task](#task-3)
 
 # Homeworks
 
@@ -608,31 +611,66 @@ For more information see [`pkaselj lab 07+ tag 5.0.0`](https://github.com/fesb-d
 ### Task
 
 - **Project Task:** Business Logic
-- **Result:** A simple HTML/CSS/JS frontend for the web application
+- **Result:** A simple self-contained WebAPI backend with logic 
 - **Requirements:**
-  1. Create a DTO object for your model.
+1. Create a DTO object for your model.
       - Place DTO models in Controller/DTO folder.
       - Update Controller to send/receive DTOs instead of Models.
       - Do not forget to transform DTO to Model and/or Model to DTO in your controller.
       - Refer to the [`Model/Email.cs`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/5.0.0/Models/Email.cs) and [`Controller/`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/tree/5.0.0/Controllers/DTO)
-  2. Create a custom exception class
+2. Create a custom exception class
       -  Name it `LogicException`
       -  Place it into `Exceptions/` folder.
       -  Refer to the [`Exceptions/UserErrorMessage`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/5.0.0/Exceptions/UserErrorMessage.cs)
-  3. Create a *Logic* class and its interface.
+3. Create a *Logic* class and its interface.
       - Name it `<Domain>Logic.cs` (e.g. `EmailLogic.cs`)
       - Name the interface `I<Domain>Logic.cs` (e.g. `IEmailLogic.cs`) 
       - Do not forget to register the service in [`Program.cs`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/a56389c6678bb49b05173298c2f45d4f520a1e55/Program.cs#L13)
-  4. Implement some logic e.g.:
+4. Implement some logic e.g.:
      - Field validation (fields cannot be empty, too long, too short, etc.)
      - Throw `LogicException` if validation fails
-  5. Add a `filter` to the controller.
+5. Add a `filter` to the controller.
       - Create a new class called `ErrorFilter.cs` in folder `Filters`.
       - Copy the class logic from [`Filters/LogFilter.cs` from pkaselj lab 07+](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/5.0.0/Filters/LogFilter.cs) **NOTE: Copy only the class (from line 8 to line 57 inclusive). Change the class name to `ErrorFilter` and change the [line 28](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/a56389c6678bb49b05173298c2f45d4f520a1e55/Filters/LogFilter.cs#L28) to `if(context.Exception.GetType() == typeof(LogicException))`**
       - Above your controller add the line `[ErrorFilter]` as in [`Controllers/EmailController.cs`](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/blob/a56389c6678bb49b05173298c2f45d4f520a1e55/Controllers/EmailController.cs#L14)
 - **Deadline:** Friday, January 19th, 2024
 - **Useful Links:**
   - [Github Repository - pkasel lab 07+ - tag 5.0.0](https://github.com/fesb-distributed-systems-2023/pkasel-lab-07-plus/tree/5.0.0)
+
+## Homework 7 - Frontend
+
+### General
+
+The WebAPI backend implements the core of the application: the business logic, object validation, 
+storage/persistence, communication and integration with other services, etc. The course was focused mostly on backend development with no thought for the user. The WebAPI takes input from the Swagger or Postman taking HTTP requests with mostly JSON object body/payload. This type of input is suitable for the average user. The average user probably doesn't know what is a JSON object, let alone how to create and send one.
+
+To make our application (Email Application) usable, we have developed a *frontend* for it. The *frontend* is an "application" that runs on the browser. Its sole purpose is to:
+1. Draw a form in the browser so the user can easily enter the data.
+2. Read the user input from the form.
+3. Create a JSON object from user data and send the HTTP request to the WebAPI
+4. Wait for the HTTP response and take appropriate action e.g. notify the user in case of error, or load another page, display an image, show a warning, etc.
+
+Up until now, we did the 3rd step using Postman and/or Swagger. Now, we created a frontend "application" for it, which also presents the data to the user in a prettier way than JSON (steps 1, 2 and 4).
+
+The frontend can be developed using many tools/languages/libraries/frameworks/no-code platforms like React, Angular (which is different from the AngularJS and newer), Vue, Blazor, WebAssembly, TypeScript, etc. But the core of the frontend is made up of **HTML, CSS and JavaScript**. With the exception of *WebAssembly* all other languages are converted into **HTML, CSS and JS** which can be understood by the browser.
+
+In this case, the frontend was developed in plain *HTML, CSS and JS* with the addition of the *Boostrap* stylesheet library to stylize the design. The code can be found at [pkaselj-lab-08](https://github.com/fesb-distributed-systems-2023/pkaselj-lab-08)
+
+### Task
+
+- **Project Task:** Frontend
+- **Result:** A simple HTML/CSS/JS frontend for the WebAPI backend
+- **Requirements:**
+1. Create a frontend for the WebAPI.
+  - Frontend must cover *Create and Read* operations of the *CRUD* (*Delete and Update* can be ignored).
+  - Frontend can be created in any language/framework/library/etc.
+  - Frontend can be simple and primitive, just enough so its usable
+  - You can take ideas from the [pkaselj-lab-08](https://github.com/fesb-distributed-systems-2023/pkaselj-lab-08)
+  - Look at the links provided below for help and inspiration.
+  - Download *Live Server* extension for *VSCode* to run the server with frontend.
+- **Deadline:** Friday, January 19th, 2024
+- **Useful Links:**
+  - [Github repository pkaselj-lab-08](https://github.com/fesb-distributed-systems-2023/pkaselj-lab-08)
   - [W3Schools HTML How-To Section](https://www.w3schools.com/howto/default.asp)
   - [W3Schools HTML](https://www.w3schools.com/html/)
   - [W3Schools HTML Tags](https://www.w3schools.com/tags/default.asp)
@@ -640,4 +678,5 @@ For more information see [`pkaselj lab 07+ tag 5.0.0`](https://github.com/fesb-d
   - [W3Schools HTML Examples](https://www.w3schools.com/html/html_examples.asp)
   - [W3Schools CSS](https://www.w3schools.com/css/default.asp)
   - [W3Schools JS](https://www.w3schools.com/js/default.asp)
+  - [Bootstrap 4.6.X](https://getbootstrap.com/docs/4.6/getting-started/introduction/)
 
